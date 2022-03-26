@@ -70,10 +70,26 @@ public class MainActivity extends AppCompatActivity {
         myDate.setTime(expirationDate);
 
         // TODO: Format the date for the locale.
+        TextView expiredDateTextView = findViewById(R.id.date);
+        String formatedExpiredDate = DateFormat.getDateInstance().format(myDate);
+
+        expiredDateTextView.setText(formatedExpiredDate);
 
 
         // TODO: Apply the exchange rate and calculate the price.
+        String deviceLocale = Locale.getDefault().getCountry();
 
+        if(deviceLocale == "ID"){
+            mPrice = mPrice * mIdExchangeRate;
+        } else if(deviceLocale == "EG"){
+            mPrice = mPrice * mEgExchangeRate;
+        } else {
+            mCurrencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        }
+
+        TextView priceTextView = findViewById(R.id.price);
+        String formattedPrice =  mCurrencyFormat.format(mPrice);
+        priceTextView.setText(formattedPrice);
 
         // TODO: Show the price string.
 
@@ -96,6 +112,15 @@ public class MainActivity extends AppCompatActivity {
                         NumberFormat mNumberFormat = NumberFormat.getNumberInstance();
 
                         // TODO: Parse string in view v to a number.
+                        try {
+                            mInputQuantity = mNumberFormat.parse(v.getText().toString()).intValue();
+                        } catch (ParseException e){
+                            v.setError(getText(R.string.enter_number));
+                            e.printStackTrace();
+                        }
+
+                        String formattedQuantity = mNumberFormat.format(mInputQuantity);
+                        v.setText(formattedQuantity);
 
                         // TODO: Convert to string using locale's number format.
 
